@@ -36,7 +36,21 @@ require_once 'app/views/layouts/sidebar.php';
                             <th style="padding:10px; border-bottom:2px solid #eee;">Script Content</th>
                             <th style="padding:10px; border-bottom:2px solid #eee;">Reviewer</th>
                             <th style="padding:10px; border-bottom:2px solid #eee;">Status</th>
-                            <th style="padding:10px; border-bottom:2px solid #eee; text-align:right;">Last Update</th>
+                            <th style="padding:10px; border-bottom:2px solid #eee; text-align:right; cursor:pointer;" onclick="window.location.href='?controller=audit&sort_updated=<?php echo ($sortUpdated ?? 'DESC') === 'DESC' ? 'ASC' : 'DESC'; ?>&start_date=<?php echo htmlspecialchars($startDate ?? ''); ?>&end_date=<?php echo htmlspecialchars($endDate ?? ''); ?>'">
+                                <div style="display:flex; align-items:center; justify-content:flex-end; gap:5px;">
+                                    Last Update
+                                    <?php if (isset($sortUpdated)): // Only show icon if active ?>
+                                        <?php if ($sortUpdated === 'DESC'): ?>
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+                                        <?php else: ?>
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                                        <?php endif; ?>
+                                    <?php else: ?>
+                                        <!-- Inactive State (Neutral Icon) -->
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"/></svg>
+                                    <?php endif; ?>
+                                </div>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>

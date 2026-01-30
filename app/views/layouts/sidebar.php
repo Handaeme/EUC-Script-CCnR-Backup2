@@ -16,14 +16,36 @@
     </style>
     
     <div class="sidebar">
-        <a href="index.php" class="menu-item <?php echo isActive('dashboard'); ?>">Dashboard</a>
+        <?php
+        $role = $_SESSION['user']['role_code'] ?? '';
+        $reqModel = new \App\Models\RequestModel();
+        $badgeCount = 0;
+        $userid = $_SESSION['user']['userid'];
+
+        // Determine badge count for reviewers (Show on Dashboard)
+        if ($role === 'SPV') {
+            $pending = $reqModel->getPendingRequests($userid, 'SPV');
+            $badgeCount = count($pending);
+        } elseif ($role === 'PIC') {
+            $pending = $reqModel->getPendingRequests($userid, 'PIC');
+            $badgeCount = count($pending);
+        } elseif ($role === 'PROCEDURE') {
+            $pending = $reqModel->getPendingRequests($userid, 'PROCEDURE');
+            $badgeCount = count($pending);
+        }
+        ?>
+        
+        <a href="index.php" class="menu-item <?php echo isActive('dashboard'); ?>">
+            Dashboard
+            <?php if ($badgeCount > 0): ?>
+                <span style="background:#ef4444; color:white; font-size:10px; padding:2px 6px; border-radius:10px; margin-left:8px; font-weight:bold;"><?php echo $badgeCount; ?></span>
+            <?php endif; ?>
+        </a>
         
         <?php 
-        $role = $_SESSION['user']['role_code'] ?? '';
         if ($role === 'MAKER' || $role === 'Maker') {
-            // Count Pending Revisions
-            $reqModel = new \App\Models\RequestModel();
-            $stats = $reqModel->getMakerStats($_SESSION['user']['userid']);
+            // Count Pending Revisions for Maker
+            $stats = $reqModel->getMakerStats($userid);
             $revCount = $stats['pending'] ?? 0;
         ?>
             <a href="?controller=request&action=index" class="menu-item <?php echo isActive('request', 'index'); ?>">

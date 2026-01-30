@@ -14,12 +14,24 @@ class AuditController extends Controller {
         $reqModel = $this->model('RequestModel');
         $startDate = $_GET['start_date'] ?? null;
         $endDate = $_GET['end_date'] ?? null;
-        $logs = $reqModel->getAuditExportData($startDate, $endDate);
+        
+        // Sorting Logic
+        $sortUpdated = $_GET['sort_updated'] ?? null;
+        $sortColumn = 'created_at'; // Default
+        $sortOrder = 'DESC'; // Default
+        
+        if ($sortUpdated) {
+             $sortColumn = 'updated_at';
+             $sortOrder = $sortUpdated;
+        }
+        
+        $logs = $reqModel->getAuditExportData($startDate, $endDate, $sortColumn, $sortOrder);
         
         $this->view('audit/index', [
             'logs' => $logs,
             'startDate' => $startDate,
-            'endDate' => $endDate
+            'endDate' => $endDate,
+            'sortUpdated' => $sortUpdated // Pass for UI toggle
         ]);
     }
 

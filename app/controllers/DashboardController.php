@@ -113,13 +113,20 @@ class DashboardController extends Controller {
         
         $startDate = $_GET['start_date'] ?? null;
         $endDate = $_GET['end_date'] ?? null;
+        $sortPublished = $_GET['sort_published'] ?? 'DESC'; // Default Newest First
         
-        $libraryItems = $reqModel->getLibraryItemsWithContent($startDate, $endDate);
+        // Validate Sort
+        if (!in_array(strtoupper($sortPublished), ['ASC', 'DESC'])) {
+            $sortPublished = 'DESC';
+        }
+        
+        $libraryItems = $reqModel->getLibraryItemsWithContent($startDate, $endDate, $sortPublished);
         
         $this->view('dashboard/library', [
             'libraryItems' => $libraryItems,
             'startDate' => $startDate,
-            'endDate' => $endDate
+            'endDate' => $endDate,
+            'sortPublished' => $sortPublished
         ]);
     }
     

@@ -25,6 +25,6 @@
     <!-- Search Box -->
     <div style="flex:1; text-align:right; min-width:200px;">
          <label style="font-size:12px; font-weight:bold; color:#555; display:block; margin-bottom:4px;">Quick Search (Live)</label>
-         <input type="text" id="searchInput" onkeyup="filterTable('searchInput', 'dataTable')" placeholder="Type to search..." style="padding:7px 10px; width:100%; max-width:250px; border:1px solid #ddd; border-radius:4px; font-size:14px;">
+         <input type="text" id="searchInput" oninput="window.filterTable('searchInput', 'dataTable')" autocomplete="off" placeholder="Type to search..." style="padding:7px 10px; width:100%; max-width:250px; border:1px solid #ddd; border-radius:4px; font-size:14px;">
     </div>
 </div>

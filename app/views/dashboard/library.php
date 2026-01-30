@@ -50,7 +50,16 @@ require_once 'app/views/layouts/sidebar.php';
                             <th style="padding:12px; border-bottom:2px solid #eee;">Media</th>
                             <th style="padding:12px; border-bottom:2px solid #eee; width:40%;">Content Script</th>
                             <th style="padding:12px; border-bottom:2px solid #eee; white-space:nowrap;">Created Date</th>
-                            <th style="padding:12px; border-bottom:2px solid #eee; white-space:nowrap;">Published Date</th>
+                            <th style="padding:12px; border-bottom:2px solid #eee; white-space:nowrap; cursor:pointer;" onclick="window.location.href='?controller=dashboard&action=library&sort_published=<?php echo ($sortPublished ?? 'DESC') === 'DESC' ? 'ASC' : 'DESC'; ?>&start_date=<?php echo htmlspecialchars($startDate ?? ''); ?>&end_date=<?php echo htmlspecialchars($endDate ?? ''); ?>'">
+                                <div style="display:flex; align-items:center; gap:5px;">
+                                    Published Date
+                                    <?php if (($sortPublished ?? 'DESC') === 'DESC'): ?>
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+                                    <?php else: ?>
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                                    <?php endif; ?>
+                                </div>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>

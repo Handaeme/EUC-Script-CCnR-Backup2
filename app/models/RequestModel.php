@@ -372,7 +372,7 @@ class RequestModel {
         return true;
     }
 
-    public function getLibraryItems($startDate = null, $endDate = null) {
+    public function getLibraryItems($startDate = null, $endDate = null, $sortOrder = 'DESC') {
         $where = "";
         $params = [];
         if ($startDate && $endDate) {
@@ -380,8 +380,11 @@ class RequestModel {
             $params = [$startDate, $endDate];
         }
         
+        // Validation for Sort Order
+        $sort = strtoupper($sortOrder) === 'ASC' ? 'ASC' : 'DESC';
+        
         // Simple query for now (will fix JOIN later)
-        $sql = "SELECT * FROM script_library $where ORDER BY created_at DESC";
+        $sql = "SELECT * FROM script_library $where ORDER BY created_at $sort";
         
         $stmt = sqlsrv_query($this->conn, $sql, $params);
         
@@ -399,8 +402,8 @@ class RequestModel {
         return $rows;
     }
     
-    public function getLibraryItemsWithContent($startDate = null, $endDate = null) {
-        $items = $this->getLibraryItems($startDate, $endDate);
+    public function getLibraryItemsWithContent($startDate = null, $endDate = null, $sortOrder = 'DESC') {
+        $items = $this->getLibraryItems($startDate, $endDate, $sortOrder);
         
         // Deduplication Logic: Group by Request ID
         $uniqueScripts = [];
@@ -552,7 +555,7 @@ class RequestModel {
         return $rows;
     }
 
-    public function getAuditExportData($startDate = null, $endDate = null) {
+    public function getAuditExportData($startDate = null, $endDate = null, $sortColumn = 'created_at', $sortOrder = 'DESC') {
         // Get all requests with aggregated audit data
         $where = "";
         $params = [];
@@ -560,7 +563,17 @@ class RequestModel {
             $where = "WHERE CAST(r.created_at AS DATE) >= ? AND CAST(r.created_at AS DATE) <= ?";
             $params = [$startDate, $endDate];
         }
-        $sql = "SELECT r.* FROM script_request r $where ORDER BY r.created_at DESC";
+        
+        // Whitelist Columns
+        $validColumns = ['created_at', 'updated_at'];
+        if (!in_array($sortColumn, $validColumns)) {
+            $sortColumn = 'created_at';
+        }
+        
+        // Whitelist Order
+        $sortOrder = strtoupper($sortOrder) === 'ASC' ? 'ASC' : 'DESC';
+
+        $sql = "SELECT r.* FROM script_request r $where ORDER BY r.$sortColumn $sortOrder";
         $stmt = sqlsrv_query($this->conn, $sql, $params);
         
         $exportData = [];
